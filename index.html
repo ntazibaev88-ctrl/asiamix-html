@@ -576,7 +576,9 @@ const WHATSAPP="77074927402";
 const KASPI_PHONE="77000000000"; // мысалы: 77074927402
 // ⬆️⬆️⬆️ ------------------------------------------------- ⬆️⬆️⬆️
 const TG_TOKEN="8913864790:AAFgJyTIFAaMBv5hLbsTMl3UbzCQK4QzmLA";
-const TG_CHAT="1248306372";
+const const TG_CHAT="1248306372";
+const SUPABASE_URL="https://xwljeilbvfmafhfafusb.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3bGplaWxidmZtYWZoZmFmdXNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxMzUyNzcsImV4cCI6MjA2MzcxMTI3N30.Q2fItjkDPdQqBCNRtR3iREzOjbqCVJg9NeUqzgUJvJQ";
 const DELIVERY_COST=1000, FREE_MIN=5000;
 
 // ===== PRODUCTS =====
@@ -812,6 +814,14 @@ async function submitOrder(){
       timeStr:new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})
     });
     localStorage.setItem('am_orders',JSON.stringify(orders));
+    // Supabase-ке сақтау
+    try{
+      await fetch(SUPABASE_URL+'/rest/v1/orders',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=minimal'},
+        body:JSON.stringify({customer_name:name,customer_phone:phone,address:addr,delivery_type:deliveryType,payment:payMethod?payMap[payMethod]:'',total,items:orderItems,status:'new'})
+      });
+    }catch(e){}
   }catch(e){}
 
   // ===== 2) TELEGRAM АРҚЫЛЫ ЖІБЕРУ (басқа құрылғыдағы админ панельге) =====
